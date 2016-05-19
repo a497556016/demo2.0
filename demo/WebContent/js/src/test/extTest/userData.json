@@ -1,0 +1,18 @@
+{
+	rows : [
+		{userId : "123",password : "123",sex : "1",birthday : "1989-02-23",email : "123@123.com",educational : "本科"},
+		{userId : "456",password : "123",sex : "1",birthday : "1989-02-23",email : "123@123.com",educational : "博士"},
+		{userId : "789",password : "123",sex : "1",birthday : "1994-02-22",email : "123@123.com",educational : "本科"},
+		{userId : "1234",password : "123",sex : "0",birthday : "1989-02-12",email : "123@123.com",educational : "本科"},
+		{userId : "5678",password : "123",sex : "1",birthday : "1992-02-16",email : "123@123.com",educational : "博士"},
+		{userId : "12345",password : "123",sex : "0",birthday : "1989-02-23",email : "123@123.com",educational : "本科"},
+		{userId : "56789",password : "123",sex : "1",birthday : "1989-04-23",email : "123@123.com",educational : "本科"},
+		{userId : "35214",password : "123",sex : "0",birthday : "1992-02-17",email : "123@123.com",educational : "研究生"},
+		{userId : "21234",password : "123",sex : "1",birthday : "1989-03-23",email : "123@123.com",educational : "本科"},
+		{userId : "02414",password : "123",sex : "1",birthday : "1991-07-23",email : "123@123.com",educational : "本科"},
+		{userId : "65471",password : "123",sex : "0",birthday : "1989-01-23",email : "123@123.com",educational : "研究生"},
+		{userId : "022345",password : "123",sex : "1",birthday : "1989-08-23",email : "123@123.com",educational : "本科"},
+		{userId : "55122",password : "123",sex : "1",birthday : "1990-02-23",email : "123@123.com",educational : "本科"}
+	],
+	total : 100
+}

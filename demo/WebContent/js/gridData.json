@@ -1,0 +1,7 @@
+{
+	total : 100000,
+	rows : [
+		{id : 1,username : "admin"},
+		{id : 2,username : "heshaowei"}
+	]
+}
