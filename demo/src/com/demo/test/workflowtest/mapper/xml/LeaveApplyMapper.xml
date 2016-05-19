@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.test.workflowtest.mapper.LeaveApplyMapper">
+	<insert id="save" parameterType="LeaveApplyInfo" keyProperty="id" keyColumn="id">
+		insert into 
+		leave_apply_info(person_code,last_name,leave_reason,start_date,end_date)
+		values(#{personCode},#{lastName},#{leaveReason},#{startDate},#{endDate})
+	</insert>
+</mapper>

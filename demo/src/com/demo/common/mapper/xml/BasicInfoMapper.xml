@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.common.mapper.BasicInfoMapper">
+
+	<!-- 实体映射Map -->
+	<resultMap type="basicInfo" id="basicInfoMap">
+		<id column="ID" property="id"/>
+		<result column="SEQ" property="seq"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="MODIFY_DATE" property="modifyDate"/>
+		<result column="TYPE" property="type"/>
+		<result column="CODE" property="code"/>
+		<result column="NAME" property="name"/>
+		<result column="REMARK" property="remark"/>
+		<result column="CREATE_BY" property="createBy"/>
+		<result column="MODIFY_BY" property="modifyBy"/>
+		<result column="ENABLE" property="enable"/>
+	</resultMap>
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+	ID AS id,	SEQ AS seq,	CREATE_DATE AS createDate,	MODIFY_DATE AS modifyDate,	TYPE AS type,	CODE AS code,	NAME AS name,	REMARK AS remark,	CREATE_BY AS createBy,	MODIFY_BY AS modifyBy,	ENABLE AS enable
+	</sql>
+
+	<!-- 查询分页列表基础SQL -->
+	<sql id="queryBaseSql">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM SYS_BASIC_INFO
+		 WHERE 1 = 1
+		 <if test="seq != null and seq != 0">AND SEQ = #{seq}</if>
+		 <if test="createDate != null and createDate != ''">AND CREATE_DATE = #{createDate}</if>
+		 <if test="modifyDate != null and modifyDate != ''">AND MODIFY_DATE = #{modifyDate}</if>
+		 <if test="type != null and type != ''">AND TYPE = #{type}</if>
+		 <if test="code != null and code != ''">AND CODE = #{code}</if>
+		 <if test="name != null and name != ''">AND NAME = #{name}</if>
+		 <if test="remark != null and remark != ''">AND REMARK = #{remark}</if>
+		 <if test="createBy != null and createBy != ''">AND CREATE_BY = #{createBy}</if>
+		 <if test="modifyBy != null and modifyBy != ''">AND MODIFY_BY = #{modifyBy}</if>
+		 <if test="enable != null and enable != ''">AND ENABLE = #{enable}</if>
+
+	</sql>
+
+	<!-- 查询列表数据 -->
+	<select id="queryList" resultType="basicInfo" parameterType="basicInfo">
+		 SELECT 
+			 *
+		 FROM
+		 (
+		 <include refid="queryBaseSql" />
+		 ) T LIMIT #{start},#{limit}
+	</select>
+
+	<!-- 查询总条数 -->
+	<select id="queryCount" resultType="java.lang.Long" parameterType="basicInfo">
+		 SELECT 
+			 COUNT(0)
+		 FROM
+		 (
+		 <include refid="queryBaseSql" />
+		 ) T
+	</select>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="basicInfo" parameterType="java.lang.Integer">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM SYS_BASIC_INFO
+		 WHERE ID = #{id}
+	</select>
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		 DELETE FROM SYS_BASIC_INFO
+		 WHERE ID = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="basicInfo">
+		 INSERT INTO SYS_BASIC_INFO
+ 		(ID,SEQ,CREATE_DATE,MODIFY_DATE,TYPE,CODE,NAME,REMARK,CREATE_BY,MODIFY_BY,ENABLE) 
+		 VALUES 
+ 		(#{id},#{seq},#{createDate},#{modifyDate},#{type},#{code},#{name},#{remark},#{createBy},#{modifyBy},#{enable}) 
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="basicInfo">
+		 INSERT INTO SYS_BASIC_INFO
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				 ID,
+			</if>
+			<if test="seq != null">
+				 SEQ,
+			</if>
+			<if test="createDate != null">
+				 CREATE_DATE,
+			</if>
+			<if test="modifyDate != null">
+				 MODIFY_DATE,
+			</if>
+			<if test="type != null">
+				 TYPE,
+			</if>
+			<if test="code != null">
+				 CODE,
+			</if>
+			<if test="name != null">
+				 NAME,
+			</if>
+			<if test="remark != null">
+				 REMARK,
+			</if>
+			<if test="createBy != null">
+				 CREATE_BY,
+			</if>
+			<if test="modifyBy != null">
+				 MODIFY_BY,
+			</if>
+			<if test="enable != null">
+				 ENABLE,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				 #{id},
+			</if>
+			<if test="seq!=null">
+				 #{seq},
+			</if>
+			<if test="createDate!=null">
+				 #{createDate},
+			</if>
+			<if test="modifyDate!=null">
+				 #{modifyDate},
+			</if>
+			<if test="type!=null">
+				 #{type},
+			</if>
+			<if test="code!=null">
+				 #{code},
+			</if>
+			<if test="name!=null">
+				 #{name},
+			</if>
+			<if test="remark!=null">
+				 #{remark},
+			</if>
+			<if test="createBy!=null">
+				 #{createBy},
+			</if>
+			<if test="modifyBy!=null">
+				 #{modifyBy},
+			</if>
+			<if test="enable!=null">
+				 #{enable},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="basicInfo">
+		 UPDATE SYS_BASIC_INFO
+ 		 <set> 
+			<if test="seq != null">
+				 SEQ = #{seq},
+			</if>
+			<if test="createDate != null">
+				 CREATE_DATE = #{createDate},
+			</if>
+			<if test="modifyDate != null">
+				 MODIFY_DATE = #{modifyDate},
+			</if>
+			<if test="type != null">
+				 TYPE = #{type},
+			</if>
+			<if test="code != null">
+				 CODE = #{code},
+			</if>
+			<if test="name != null">
+				 NAME = #{name},
+			</if>
+			<if test="remark != null">
+				 REMARK = #{remark},
+			</if>
+			<if test="createBy != null">
+				 CREATE_BY = #{createBy},
+			</if>
+			<if test="modifyBy != null">
+				 MODIFY_BY = #{modifyBy},
+			</if>
+			<if test="enable != null">
+				 ENABLE = #{enable},
+			</if>
+
+ 		 </set>
+		 WHERE ID = #{id}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="basicInfo">
+		 UPDATE SYS_BASIC_INFO
+		 SET 
+			 SEQ = #{seq},
+			 CREATE_DATE = #{createDate},
+			 MODIFY_DATE = #{modifyDate},
+			 TYPE = #{type},
+			 CODE = #{code},
+			 NAME = #{name},
+			 REMARK = #{remark},
+			 CREATE_BY = #{createBy},
+			 MODIFY_BY = #{modifyBy},
+			 ENABLE = #{enable}
+		 WHERE ID = #{id}
+	</update>
+
+</mapper>

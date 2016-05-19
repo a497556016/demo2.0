@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.common.mapper.ResourceMapper">
+
+	<!-- 实体映射Map -->
+	<resultMap type="resource" id="resourceMap">
+		<id column="ID" property="id"/>
+		<result column="SORT_ID" property="sortId"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="MODIFY_DATE" property="modifyDate"/>
+		<result column="CODE" property="code"/>
+		<result column="P_CODE" property="pCode"/>
+		<result column="TEXT" property="text"/>
+		<result column="URL" property="url"/>
+		<result column="CREATE_BY" property="createBy"/>
+		<result column="TYPE" property="type"/>
+		<result column="EXPANDED" property="expanded"/>
+		<result column="LEAF" property="leaf"/>
+		<result column="MODIFY_BY" property="modifyBy"/>
+	</resultMap>
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+	ID AS id,	SORT_ID AS sortId,	CREATE_DATE AS createDate,	MODIFY_DATE AS modifyDate,	CODE AS code,	P_CODE AS pCode,	TEXT AS text,	URL AS url,	CREATE_BY AS createBy,	TYPE AS type,	EXPANDED AS expanded,	LEAF AS leaf,	MODIFY_BY AS modifyBy
+	</sql>
+
+	<!-- 查询分页列表基础SQL -->
+	<sql id="queryBaseSql">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM SYS_RESOURCE
+		 WHERE 1 = 1
+		 <if test="sortId != null and sortId != 0">AND SORT_ID = #{sortId}</if>
+		 <if test="createDate != null and createDate != ''">AND CREATE_DATE = #{createDate}</if>
+		 <if test="modifyDate != null and modifyDate != ''">AND MODIFY_DATE = #{modifyDate}</if>
+		 <if test="code != null and code != ''">AND CODE = #{code}</if>
+		 <if test="pCode != null and pCode != ''">AND P_CODE = #{pCode}</if>
+		 <if test="text != null and text != ''">AND TEXT = #{text}</if>
+		 <if test="url != null and url != ''">AND URL = #{url}</if>
+		 <if test="createBy != null and createBy != ''">AND CREATE_BY = #{createBy}</if>
+		 <if test="type != null and type != ''">AND TYPE = #{type}</if>
+		 <if test="expand != null and expand != ''">AND EXPANDED = #{expanded}</if>
+		 <if test="leaf != null and leaf != ''">AND LEAF = #{leaf}</if>
+		 <if test="modifyBy != null and modifyBy != ''">AND MODIFY_BY = #{modifyBy}</if>
+
+	</sql>
+
+	<!-- 查询列表数据 -->
+	<select id="queryList" resultType="resource" parameterType="resource">
+		 SELECT 
+			 *
+		 FROM
+		 (
+		 <include refid="queryBaseSql" />
+		 ) T LIMIT #{start},#{limit}
+	</select>
+
+	<!-- 查询总条数 -->
+	<select id="queryCount" resultType="java.lang.Long" parameterType="resource">
+		 SELECT 
+			 COUNT(0)
+		 FROM
+		 (
+		 <include refid="queryBaseSql" />
+		 ) T
+	</select>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="resource" parameterType="java.lang.Integer">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM SYS_RESOURCE
+		 WHERE ID = #{id}
+	</select>
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		 DELETE FROM SYS_RESOURCE
+		 WHERE ID = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="resource">
+		 INSERT INTO SYS_RESOURCE
+ 		(ID,SORT_ID,CREATE_DATE,MODIFY_DATE,CODE,P_CODE,TEXT,URL,CREATE_BY,TYPE,EXPANDED,LEAF,MODIFY_BY) 
+		 VALUES 
+ 		(#{id},#{sortId},#{createDate},#{modifyDate},#{code},#{pCode},#{text},#{url},#{createBy},#{type},#{expanded},#{leaf},#{modifyBy}) 
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="resource">
+		 INSERT INTO SYS_RESOURCE
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				 ID,
+			</if>
+			<if test="sortId != null">
+				 SORT_ID,
+			</if>
+			<if test="createDate != null">
+				 CREATE_DATE,
+			</if>
+			<if test="modifyDate != null">
+				 MODIFY_DATE,
+			</if>
+			<if test="code != null">
+				 CODE,
+			</if>
+			<if test="pCode != null">
+				 P_CODE,
+			</if>
+			<if test="text != null">
+				 TEXT,
+			</if>
+			<if test="url != null">
+				 URL,
+			</if>
+			<if test="createBy != null">
+				 CREATE_BY,
+			</if>
+			<if test="type != null">
+				 TYPE,
+			</if>
+			<if test="expanded != null">
+				 EXPANDED,
+			</if>
+			<if test="leaf != null">
+				 LEAF,
+			</if>
+			<if test="modifyBy != null">
+				 MODIFY_BY,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				 #{id},
+			</if>
+			<if test="sortId!=null">
+				 #{sortId},
+			</if>
+			<if test="createDate!=null">
+				 #{createDate},
+			</if>
+			<if test="modifyDate!=null">
+				 #{modifyDate},
+			</if>
+			<if test="code!=null">
+				 #{code},
+			</if>
+			<if test="pCode!=null">
+				 #{pCode},
+			</if>
+			<if test="text!=null">
+				 #{text},
+			</if>
+			<if test="url!=null">
+				 #{url},
+			</if>
+			<if test="createBy!=null">
+				 #{createBy},
+			</if>
+			<if test="type!=null">
+				 #{type},
+			</if>
+			<if test="expanded!=null">
+				 #{expanded},
+			</if>
+			<if test="leaf!=null">
+				 #{leaf},
+			</if>
+			<if test="modifyBy!=null">
+				 #{modifyBy},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="resource">
+		 UPDATE SYS_RESOURCE
+ 		 <set> 
+			<if test="sortId != null">
+				 SORT_ID = #{sortId},
+			</if>
+			<if test="createDate != null">
+				 CREATE_DATE = #{createDate},
+			</if>
+			<if test="modifyDate != null">
+				 MODIFY_DATE = #{modifyDate},
+			</if>
+			<if test="code != null">
+				 CODE = #{code},
+			</if>
+			<if test="pCode != null">
+				 P_CODE = #{pCode},
+			</if>
+			<if test="text != null">
+				 TEXT = #{text},
+			</if>
+			<if test="url != null">
+				 URL = #{url},
+			</if>
+			<if test="createBy != null">
+				 CREATE_BY = #{createBy},
+			</if>
+			<if test="type != null">
+				 TYPE = #{type},
+			</if>
+			<if test="expanded != null">
+				 EXPANDED = #{expanded},
+			</if>
+			<if test="leaf != null">
+				 LEAF = #{leaf},
+			</if>
+			<if test="modifyBy != null">
+				 MODIFY_BY = #{modifyBy},
+			</if>
+
+ 		 </set>
+		 WHERE ID = #{id}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="resource">
+		 UPDATE SYS_RESOURCE
+		 SET 
+			 SORT_ID = #{sortId},
+			 CREATE_DATE = #{createDate},
+			 MODIFY_DATE = #{modifyDate},
+			 CODE = #{code},
+			 P_CODE = #{pCode},
+			 TEXT = #{text},
+			 URL = #{url},
+			 CREATE_BY = #{createBy},
+			 TYPE = #{type},
+			 EXPANDED = #{expanded},
+			 LEAF = #{leaf},
+			 MODIFY_BY = #{modifyBy}
+		 WHERE ID = #{id}
+	</update>
+
+	<select id="queryResourcesByPersonCode" parameterType="String" resultMap="resourceMap">
+		SELECT sr.* FROM SYS_RESOURCE sr
+		LEFT JOIN SYS_ROLE_RES_RELATION srrr ON sr.CODE = srrr.RES_CODE
+		LEFT JOIN SYS_ROLE sr2 ON srrr.ROLE_CODE = sr2.ROLE_CODE
+		LEFT JOIN SYS_USER_ROLE_RELATION surr ON surr.ROLE_CODE = sr2.ROLE_CODE
+		LEFT JOIN SYS_USER_INFO sui ON surr.PERSON_CODE = sui.PERSON_CODE
+		WHERE sui.PERSON_CODE = #{personCode}
+	</select>
+</mapper>

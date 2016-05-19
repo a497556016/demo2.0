@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.common.mapper.UserInfoMapper">
+
+	<!-- 实体映射Map -->
+	<resultMap type="userInfo" id="userInfoMap">
+		<id column="ID" property="id"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="MODIFY_DATE" property="modifyDate"/>
+		<result column="PERSON_CODE" property="personCode"/>
+		<result column="LAST_NAME" property="lastName"/>
+		<result column="PASSWORD" property="password"/>
+		<result column="EMAIL" property="email"/>
+		<result column="CREATE_BY" property="createBy"/>
+		<result column="LOCKED" property="locked"/>
+		<result column="MODIFY_BY" property="modifyBy"/>
+		<collection property="resources" column="PERSON_CODE" ofType="resource" select="com.demo.common.mapper.ResourceMapper.queryResourcesByPersonCode" javaType="ArrayList">
+		</collection>
+		<collection property="roles" column="PERSON_CODE" ofType="role" select="com.demo.common.mapper.RoleMapper.queryRoleByPersonCode" javaType="ArrayList">
+		</collection>
+	</resultMap>
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+	ID AS id,	CREATE_DATE AS createDate,	MODIFY_DATE AS modifyDate,	PERSON_CODE AS personCode,	LAST_NAME AS lastName,	PASSWORD AS password,	EMAIL AS email,	CREATE_BY AS createBy,	LOCKED AS locked,	MODIFY_BY AS modifyBy
+	</sql>
+
+	<!-- 查询分页列表基础SQL -->
+	<sql id="queryBaseSql">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM SYS_USER_INFO
+		 WHERE 1 = 1
+		 <if test="createDate != null and createDate != ''">AND CREATE_DATE = #{createDate}</if>
+		 <if test="modifyDate != null and modifyDate != ''">AND MODIFY_DATE = #{modifyDate}</if>
+		 <if test="personCode != null and personCode != ''">AND PERSON_CODE = #{personCode}</if>
+		 <if test="lastName != null and lastName != ''">AND LAST_NAME = #{lastName}</if>
+		 <if test="password != null and password != ''">AND PASSWORD = #{password}</if>
+		 <if test="email != null and email != ''">AND EMAIL = #{email}</if>
+		 <if test="createBy != null and createBy != ''">AND CREATE_BY = #{createBy}</if>
+		 <if test="locked != null and locked != ''">AND LOCKED = #{locked}</if>
+		 <if test="modifyBy != null and modifyBy != ''">AND MODIFY_BY = #{modifyBy}</if>
+
+	</sql>
+
+	<!-- 查询列表数据 -->
+	<select id="queryList" resultType="userInfo" parameterType="userInfo">
+		 SELECT 
+			 *
+		 FROM
+		 (
+		 <include refid="queryBaseSql" />
+		 ) T LIMIT #{start},#{limit}
+	</select>
+
+	<!-- 查询总条数 -->
+	<select id="queryCount" resultType="java.lang.Long" parameterType="userInfo">
+		 SELECT 
+			 COUNT(0)
+		 FROM
+		 (
+		 <include refid="queryBaseSql" />
+		 ) T
+	</select>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="userInfo" parameterType="java.lang.Integer">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM SYS_USER_INFO
+		 WHERE ID = #{id}
+	</select>
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		 DELETE FROM SYS_USER_INFO
+		 WHERE ID = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="userInfo">
+		 INSERT INTO SYS_USER_INFO
+ 		(ID,CREATE_DATE,MODIFY_DATE,PERSON_CODE,LAST_NAME,PASSWORD,EMAIL,CREATE_BY,LOCKED,MODIFY_BY) 
+		 VALUES 
+ 		(#{id},#{createDate},#{modifyDate},#{personCode},#{lastName},#{password},#{email},#{createBy},#{locked},#{modifyBy}) 
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="userInfo">
+		 INSERT INTO SYS_USER_INFO
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				 ID,
+			</if>
+			<if test="createDate != null">
+				 CREATE_DATE,
+			</if>
+			<if test="modifyDate != null">
+				 MODIFY_DATE,
+			</if>
+			<if test="personCode != null">
+				 PERSON_CODE,
+			</if>
+			<if test="lastName != null">
+				 LAST_NAME,
+			</if>
+			<if test="password != null">
+				 PASSWORD,
+			</if>
+			<if test="email != null">
+				 EMAIL,
+			</if>
+			<if test="createBy != null">
+				 CREATE_BY,
+			</if>
+			<if test="locked != null">
+				 LOCKED,
+			</if>
+			<if test="modifyBy != null">
+				 MODIFY_BY,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				 #{id},
+			</if>
+			<if test="createDate!=null">
+				 #{createDate},
+			</if>
+			<if test="modifyDate!=null">
+				 #{modifyDate},
+			</if>
+			<if test="personCode!=null">
+				 #{personCode},
+			</if>
+			<if test="lastName!=null">
+				 #{lastName},
+			</if>
+			<if test="password!=null">
+				 #{password},
+			</if>
+			<if test="email!=null">
+				 #{email},
+			</if>
+			<if test="createBy!=null">
+				 #{createBy},
+			</if>
+			<if test="locked!=null">
+				 #{locked},
+			</if>
+			<if test="modifyBy!=null">
+				 #{modifyBy},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="userInfo">
+		 UPDATE SYS_USER_INFO
+ 		 <set> 
+			<if test="createDate != null">
+				 CREATE_DATE = #{createDate},
+			</if>
+			<if test="modifyDate != null">
+				 MODIFY_DATE = #{modifyDate},
+			</if>
+			<if test="personCode != null">
+				 PERSON_CODE = #{personCode},
+			</if>
+			<if test="lastName != null">
+				 LAST_NAME = #{lastName},
+			</if>
+			<if test="password != null">
+				 PASSWORD = #{password},
+			</if>
+			<if test="email != null">
+				 EMAIL = #{email},
+			</if>
+			<if test="createBy != null">
+				 CREATE_BY = #{createBy},
+			</if>
+			<if test="locked != null">
+				 LOCKED = #{locked},
+			</if>
+			<if test="modifyBy != null">
+				 MODIFY_BY = #{modifyBy},
+			</if>
+
+ 		 </set>
+		 WHERE ID = #{id}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="userInfo">
+		 UPDATE SYS_USER_INFO
+		 SET 
+			 CREATE_DATE = #{createDate},
+			 MODIFY_DATE = #{modifyDate},
+			 PERSON_CODE = #{personCode},
+			 LAST_NAME = #{lastName},
+			 PASSWORD = #{password},
+			 EMAIL = #{email},
+			 CREATE_BY = #{createBy},
+			 LOCKED = #{locked},
+			 MODIFY_BY = #{modifyBy}
+		 WHERE ID = #{id}
+	</update>
+
+	<select id="queryLoginUserInfo" parameterType="userInfo" resultMap="userInfoMap">
+		SELECT 
+			* 
+		FROM SYS_USER_INFO sui
+		WHERE sui.PERSON_CODE = #{personCode}
+		AND sui.PASSWORD = #{password}
+	</select>
+</mapper>

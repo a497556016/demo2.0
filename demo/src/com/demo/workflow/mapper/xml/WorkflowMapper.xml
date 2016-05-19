@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.workflow.mapper.WorkflowMapper">
+	<sql id="queryUserTodoTaskSql">
+		SELECT 
+			art.ID_ AS id, 
+			art.PROC_INST_ID_ AS procInstId, 
+			art.PROC_DEF_ID_ AS procDefId, 
+			art.NAME_ AS name, 
+			art.TASK_DEF_KEY_ AS taskDefKey,
+		    art.CREATE_TIME_ AS createTime,
+		    ari.USER_ID_ AS userId,
+		    ahp.BUSINESS_KEY_ AS businessKey, 
+		    ahp.START_TIME_ AS procStartTime, 
+		    ahp.START_USER_ID_ AS procStartUserId,
+		    oeut1.LAST_NAME AS procStartUserName, 
+		    ahp.NAME_ AS procInstName,
+		    arp.NAME_ AS procDefName, 
+		    oeut.LAST_NAME AS userName,
+		    ahv.TEXT_ AS processRemark
+		FROM 
+		ACT_RU_TASK art LEFT JOIN ACT_RU_IDENTITYLINK ari ON art.ID_ = ari.TASK_ID_
+		LEFT JOIN ACT_HI_PROCINST ahp ON art.PROC_INST_ID_ = ahp.PROC_INST_ID_
+		LEFT JOIN SYS_USER_INFO oeut ON ari.USER_ID_ = oeut.PERSON_CODE
+		LEFT JOIN SYS_USER_INFO oeut1 ON ahp.START_USER_ID_ = oeut1.PERSON_CODE
+		LEFT JOIN ACT_RE_PROCDEF arp ON ahp.PROC_DEF_ID_ = arp.ID_
+		LEFT JOIN ACT_HI_VARINST ahv ON ahv.NAME_ = 'processRemark' AND ahv.PROC_INST_ID_ = ahp.PROC_INST_ID_
+		WHERE ari.USER_ID_ = #{userId}
+		<if test="null != businessKey and '' != businessKey">
+		AND ahp.BUSINESS_KEY_ = #{businessKey}
+		</if>
+		<if test="null != procInstName and '' != procInstName">
+		AND arp.NAME_ = #{procInstName}
+		</if>
+		<if test="null != processRemark and '' != processRemark">
+		AND ahv.TEXT_ LIKE '%'+#{processRemark}+'%'
+		</if>
+		ORDER BY art.ID_
+	</sql>
+	<select id="queryUserTodoTaskList" parameterType="Map" resultType="TodoTaskInfo">
+		SELECT * FROM 
+		(
+			<include refid="queryUserTodoTaskSql"/>
+		) t 
+		limit #{start},#{limit}
+	</select>
+	<select id="queryUserTodoTaskCount" parameterType="Map" resultType="Long">
+		select count(0) from (<include refid="queryUserTodoTaskSql"/>) t
+	</select>
+	
+	<sql id="queryProcessSql">
+		SELECT 
+			ahp.PROC_INST_ID_ AS procInstId, 
+			ahp.BUSINESS_KEY_ AS businessKey, 
+			ahp.PROC_DEF_ID_ AS procDefId, 
+			ahp.START_TIME_ AS startTime,
+			ahp.END_TIME_ AS endTime, 
+			ahp.DURATION_ AS duration, 
+			ahp.START_USER_ID_ AS startUserId,
+			oeut.LAST_NAME AS startUserName, 
+			ahp.NAME_ AS procInstName,
+			CASE WHEN ahp.END_TIME_ IS NULL THEN '1' ELSE '0' END AS activi,
+			arp.NAME_ AS procDefName, 
+			arp.KEY_ AS procDefKey,
+			art.TASK_DEF_KEY_ AS curActivityId,
+			art.NAME_ AS curActivityName   
+		FROM 
+		ACT_HI_PROCINST ahp
+		LEFT JOIN ACT_RE_PROCDEF arp ON arp.ID_ = ahp.PROC_DEF_ID_
+		LEFT JOIN SYS_USER_INFO oeut ON oeut.PERSON_CODE = ahp.START_USER_ID_
+		LEFT JOIN ACT_RU_TASK art ON ahp.PROC_INST_ID_ = art.PROC_INST_ID_
+		WHERE 1 = 1
+		<if test="null != businessKey and '' != businessKey">
+		AND ahp.BUSINESS_KEY_ LIKE '%'+#{businessKey}+'%'
+		</if>
+		<if test="null != procDefName and '' != procDefName">
+		AND arp.NAME_ LIKE '%'+#{procDefName}+'%'
+		</if>
+		<if test="null != procInstName and '' != procInstName">
+		AND ahp.NAME_ LIKE '%'+#{procInstName}+%'
+		</if>
+		ORDER BY ahp.START_TIME_ DESC
+	</sql>
+	<select id="queryProcessList" parameterType="Map" resultType="ProcessInstanceInfo">
+		SELECT * FROM 
+		(
+			<include refid="queryProcessSql"/>
+		) t 
+		limit #{start},#{limit}
+	</select>
+	<select id="queryProcessCount" parameterType="Map" resultType="Long">
+		select count(0) from (<include refid="queryProcessSql"/>) t
+	</select>
+	
+	<sql id="queryUserDoneTaskSql">
+		SELECT 
+			ahp.PROC_INST_ID_ AS procInstId, 
+			ahp.BUSINESS_KEY_ AS businessKey, 
+			ahp.NAME_ AS procInstName,
+			arp.NAME_ AS procDefName,  
+			ahp.PROC_DEF_ID_ AS procDefId,
+		    ahp.START_TIME_ AS procStartTime, 
+		    ahp.END_TIME_ AS procEndTime, 
+		    ahp.DURATION_ AS procDuration, 
+		    ahp.START_USER_ID_ AS procStartUserId,
+		    oeut.LAST_NAME AS procStartUserName,
+		    aht.ID_ AS taskId, 
+		    aht.TASK_DEF_KEY_ AS taskDefKey, 
+		    aht.NAME_ AS taskName, 
+		    aht.START_TIME_ AS taskStartTime, 
+		    aht.END_TIME_ AS taskEndTime,
+		    aht.DURATION_ AS taskDuration,
+		    ari.USER_ID_ AS taskAcceptPersonId,
+		    oeut2.LAST_NAME AS taskAcceptPersonName,
+		    art.TASK_DEF_KEY_ AS curTaskDefKey,
+		    art.NAME_ AS curTaskName,
+		    ahv.TEXT_ AS processRemark
+		FROM ACT_HI_TASKINST aht
+		LEFT JOIN ACT_HI_IDENTITYLINK ahi ON aht.ID_ = ahi.TASK_ID_
+		LEFT JOIN ACT_HI_PROCINST ahp ON aht.PROC_INST_ID_ = ahp.PROC_INST_ID_
+		LEFT JOIN SYS_USER_INFO oeut ON ahp.START_USER_ID_ = oeut.PERSON_CODE
+		LEFT JOIN ACT_RU_TASK art ON ahp.PROC_INST_ID_ = art.PROC_INST_ID_
+		LEFT JOIN ACT_RU_IDENTITYLINK ari ON art.ID_ = ari.TASK_ID_
+		LEFT JOIN SYS_USER_INFO oeut2 ON ari.USER_ID_ = oeut2.PERSON_CODE
+		LEFT JOIN ACT_RE_PROCDEF arp ON ahp.PROC_DEF_ID_ = arp.ID_
+		LEFT JOIN ACT_HI_VARINST ahv ON ahv.NAME_ = 'processRemark' AND ahv.PROC_INST_ID_ = ahp.PROC_INST_ID_
+		WHERE 1 = 1
+		AND (ahi.USER_ID_ = #{userId} OR aht.OWNER_ = #{userId})
+		AND aht.END_TIME_ IS NOT NULL AND aht.DELETE_REASON_ = 'completed' AND ahp.PROC_INST_ID_ IS NOT NULL
+		<if test="null != businessKey and '' != businessKey">
+		AND ahp.BUSINESS_KEY_ LIKE '%'+#{businessKey}+'%'
+		</if>
+		<if test="null != procInstName and '' != procInstName">
+		AND arp.NAME_ LIKE '%'+#{procInstName}+'%'
+		</if>
+		<if test="null != minTaskEndTime and '' != minTaskEndTime">
+		<![CDATA[
+		AND CONVERT(varchar(100), aht.END_TIME_, 23) >= #{minTaskEndTime}
+		]]>
+		</if>
+		<if test="null != maxTaskEndTime and '' != maxTaskEndTime">
+		<![CDATA[
+		AND CONVERT(varchar(100), aht.END_TIME_, 23) <= #{maxTaskEndTime}
+		]]>
+		</if>
+		<if test="null != processRemark and '' != processRemark">
+		AND ahv.TEXT_ LIKE '%'+#{processRemark}+'%'
+		</if>
+		<if test="null != taskType and '' != taskType">
+			<if test="null != taskType and 0 == taskType">
+			AND ahp.START_USER_ID_ = #{userId}
+			</if>
+			<if test="null != taskType and 1 == taskType">
+			<![CDATA[AND ahp.START_USER_ID_ <> #{userId}]]>
+			</if>
+		</if>
+		ORDER BY aht.END_TIME_ DESC
+	</sql>
+	<select id="queryUserDoneTaskList" parameterType="Map" resultType="DoneTaskInfo">
+		SELECT * FROM 
+		(
+			<include refid="queryUserDoneTaskSql"/>
+		) t 
+		limit #{start},#{limit}
+	</select>
+	<select id="queryUserDoneTaskCount" parameterType="Map" resultType="Long">
+		select count(0) from (<include refid="queryUserDoneTaskSql"/>) t
+	</select>
+	
+	
+	<select id="exportProcessImg" parameterType="String" resultType="ActGeBytearray">
+		SELECT TOP 1 agb.BYTES_ as bytes FROM ACT_GE_BYTEARRAY agb
+		LEFT JOIN ACT_RE_DEPLOYMENT ard ON agb.DEPLOYMENT_ID_ = ard.ID_
+		WHERE agb.NAME_ LIKE '%'+#{procDefKey}
+		ORDER BY ard.DEPLOY_TIME_ DESC
+	</select>
+	
+	
+	<select id="queryApproveInfo" parameterType="String" resultType="ApproveInfo">
+		
+		SELECT 
+			oai.ID,
+			oai.BUSINESS_KEY AS businessKey,
+			oai.APPROVE_CODE AS approveCode,
+			oai.APPROVE_ROLE AS approveRole,
+			ahi.USER_ID_ AS lobNumber,
+			oeut.LAST_NAME AS lastName,
+			oai.TYPE,
+			oai.REMARK AS remark,
+			oai.CREATE_DATE AS createDate,
+			oai.CREATE_BY AS createBy,
+			oai.LAST_UPDATE AS lastUpdate,
+			oai.LAST_UPDATE_BY AS lastUpdateBy,
+			aht.DURATION_ AS duration 
+		FROM OP_APPROVE_INFO oai
+		LEFT JOIN ACT_HI_PROCINST ahp ON oai.BUSINESS_KEY = ahp.BUSINESS_KEY_
+		LEFT JOIN 
+		(
+			SELECT 
+				A.*
+			FROM ACT_HI_TASKINST A,
+			(SELECT TASK_DEF_KEY_,PROC_INST_ID_,max(START_TIME_) AS START_TIME_ FROM ACT_HI_TASKINST GROUP BY TASK_DEF_KEY_,PROC_INST_ID_) B
+			WHERE A.TASK_DEF_KEY_ = B.TASK_DEF_KEY_ AND A.PROC_INST_ID_ = B.PROC_INST_ID_ AND A.START_TIME_ = B.START_TIME_
+		) aht ON ahp.PROC_INST_ID_ = aht.PROC_INST_ID_ AND oai.APPROVE_CODE = aht.TASK_DEF_KEY_
+		LEFT JOIN ACT_HI_IDENTITYLINK ahi ON ahi.TASK_ID_ = aht.ID_
+		LEFT JOIN SYS_USER_INFO oeut ON ahi.USER_ID_ = oeut.PERSON_CODE
+		WHERE oai.BUSINESS_KEY = #{businessKey}
+		ORDER BY oai.ID ASC
+	</select>
+	
+	<update id="updateApproveInfo" parameterType="ApproveInfo">
+		
+		UPDATE OP_APPROVE_INFO 
+		SET 
+			TYPE = #{type},
+			REMARK = #{remark},
+			LAST_UPDATE = GETDATE(),
+			LAST_UPDATE_BY = #{lastUpdateBy}
+		WHERE 
+			<![CDATA[1 <> 1]]>
+			<if test="null != id and 0 != id">OR ID = #id#</if>
+			<if test="null != businessKey and '' != businessKey and null != approveCode and '' != approveCode">
+			OR(
+				BUSINESS_KEY = #{businessKey} AND APPROVE_CODE = #{approveCode}
+			)
+			</if>
+	</update>
+	
+	<update id="saveApproveInfo" parameterType="Map">
+		INSERT INTO OP_APPROVE_INFO
+		(
+			BUSINESS_KEY,
+			APPROVE_CODE,
+			APPROVE_ROLE,
+			CREATE_DATE,
+			CREATE_BY
+		)
+		VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+				#{item.businessKey},
+				#{item.approveCode},
+				#{item.approveRole},
+				GETDATE(),
+				#{item.createBy}
+			)
+		</foreach>
+		
+	</update>
+	
+	<delete id="deleteApproveInfoByBusinessKey" parameterType="String">
+		DELETE FROM OP_APPROVE_INFO WHERE BUSINESS_KEY = #{businessKey}
+	</delete>
+	
+	
+</mapper>

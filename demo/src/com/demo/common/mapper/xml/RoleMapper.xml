@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.common.mapper.RoleMapper">
+
+	<!-- 实体映射Map -->
+	<resultMap type="role" id="roleMap">
+		<id column="ID" property="id"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="MODIFY_DATE" property="modifyDate"/>
+		<result column="ROLE_CODE" property="roleCode"/>
+		<result column="ROLE_NAME" property="roleName"/>
+		<result column="REMARK" property="remark"/>
+		<result column="CREATE_BY" property="createBy"/>
+		<result column="MODIFY_BY" property="modifyBy"/>
+	</resultMap>
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+	ID AS id,	CREATE_DATE AS createDate,	MODIFY_DATE AS modifyDate,	ROLE_CODE AS roleCode,	ROLE_NAME AS roleName,	REMARK AS remark,	CREATE_BY AS createBy,	MODIFY_BY AS modifyBy
+	</sql>
+
+	<!-- 查询分页列表基础SQL -->
+	<sql id="queryBaseSql">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM SYS_ROLE
+		 WHERE 1 = 1
+		 <if test="createDate != null and createDate != ''">AND CREATE_DATE = #{createDate}</if>
+		 <if test="modifyDate != null and modifyDate != ''">AND MODIFY_DATE = #{modifyDate}</if>
+		 <if test="roleCode != null and roleCode != ''">AND ROLE_CODE = #{roleCode}</if>
+		 <if test="roleName != null and roleName != ''">AND ROLE_NAME = #{roleName}</if>
+		 <if test="remark != null and remark != ''">AND REMARK = #{remark}</if>
+		 <if test="createBy != null and createBy != ''">AND CREATE_BY = #{createBy}</if>
+		 <if test="modifyBy != null and modifyBy != ''">AND MODIFY_BY = #{modifyBy}</if>
+
+	</sql>
+
+	<!-- 查询列表数据 -->
+	<select id="queryList" resultType="role" parameterType="role">
+		 SELECT 
+			 *
+		 FROM
+		 (
+		 <include refid="queryBaseSql" />
+		 ) T LIMIT #{start},#{limit}
+	</select>
+
+	<!-- 查询总条数 -->
+	<select id="queryCount" resultType="java.lang.Long" parameterType="role">
+		 SELECT 
+			 COUNT(0)
+		 FROM
+		 (
+		 <include refid="queryBaseSql" />
+		 ) T
+	</select>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="role" parameterType="java.lang.Integer">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM SYS_ROLE
+		 WHERE ID = #{id}
+	</select>
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		 DELETE FROM SYS_ROLE
+		 WHERE ID = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="role">
+		 INSERT INTO SYS_ROLE
+ 		(ID,CREATE_DATE,MODIFY_DATE,ROLE_CODE,ROLE_NAME,REMARK,CREATE_BY,MODIFY_BY) 
+		 VALUES 
+ 		(#{id},#{createDate},#{modifyDate},#{roleCode},#{roleName},#{remark},#{createBy},#{modifyBy}) 
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="role">
+		 INSERT INTO SYS_ROLE
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				 ID,
+			</if>
+			<if test="createDate != null">
+				 CREATE_DATE,
+			</if>
+			<if test="modifyDate != null">
+				 MODIFY_DATE,
+			</if>
+			<if test="roleCode != null">
+				 ROLE_CODE,
+			</if>
+			<if test="roleName != null">
+				 ROLE_NAME,
+			</if>
+			<if test="remark != null">
+				 REMARK,
+			</if>
+			<if test="createBy != null">
+				 CREATE_BY,
+			</if>
+			<if test="modifyBy != null">
+				 MODIFY_BY,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				 #{id},
+			</if>
+			<if test="createDate!=null">
+				 #{createDate},
+			</if>
+			<if test="modifyDate!=null">
+				 #{modifyDate},
+			</if>
+			<if test="roleCode!=null">
+				 #{roleCode},
+			</if>
+			<if test="roleName!=null">
+				 #{roleName},
+			</if>
+			<if test="remark!=null">
+				 #{remark},
+			</if>
+			<if test="createBy!=null">
+				 #{createBy},
+			</if>
+			<if test="modifyBy!=null">
+				 #{modifyBy},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="role">
+		 UPDATE SYS_ROLE
+ 		 <set> 
+			<if test="createDate != null">
+				 CREATE_DATE = #{createDate},
+			</if>
+			<if test="modifyDate != null">
+				 MODIFY_DATE = #{modifyDate},
+			</if>
+			<if test="roleCode != null">
+				 ROLE_CODE = #{roleCode},
+			</if>
+			<if test="roleName != null">
+				 ROLE_NAME = #{roleName},
+			</if>
+			<if test="remark != null">
+				 REMARK = #{remark},
+			</if>
+			<if test="createBy != null">
+				 CREATE_BY = #{createBy},
+			</if>
+			<if test="modifyBy != null">
+				 MODIFY_BY = #{modifyBy},
+			</if>
+
+ 		 </set>
+		 WHERE ID = #{id}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="role">
+		 UPDATE SYS_ROLE
+		 SET 
+			 CREATE_DATE = #{createDate},
+			 MODIFY_DATE = #{modifyDate},
+			 ROLE_CODE = #{roleCode},
+			 ROLE_NAME = #{roleName},
+			 REMARK = #{remark},
+			 CREATE_BY = #{createBy},
+			 MODIFY_BY = #{modifyBy}
+		 WHERE ID = #{id}
+	</update>
+
+	<select id="queryRoleByPersonCode" parameterType="String" resultMap="roleMap">
+		SELECT r.* FROM sys_user_role_relation urr
+		LEFT JOIN sys_role r ON urr.role_code = r.role_code
+		WHERE urr.person_code = #{personCode}
+	</select>
+</mapper>

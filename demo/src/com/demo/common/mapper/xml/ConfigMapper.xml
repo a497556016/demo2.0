@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.common.mapper.ConfigMapper">
+
+	<!-- 实体映射Map -->
+	<resultMap type="config" id="configMap">
+		<id column="ID" property="id"/>
+		<result column="ENABLE" property="enable"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="MODIFY_DATE" property="modifyDate"/>
+		<result column="NAME" property="name"/>
+		<result column="VALUE" property="value"/>
+		<result column="REGEX" property="regex"/>
+		<result column="DESCRIPTION" property="description"/>
+		<result column="CREATE_BY" property="createBy"/>
+		<result column="MODIFY_BY" property="modifyBy"/>
+	</resultMap>
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+	ID AS id,	ENABLE AS enable,	CREATE_DATE AS createDate,	MODIFY_DATE AS modifyDate,	NAME AS name,	VALUE AS value,	REGEX AS regex,	DESCRIPTION AS description,	CREATE_BY AS createBy,	MODIFY_BY AS modifyBy
+	</sql>
+
+	<!-- 查询分页列表基础SQL -->
+	<sql id="queryBaseSql">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM SYS_CONFIG
+		 WHERE 1 = 1
+		 <if test="enable != null and enable != 0">AND ENABLE = #{enable}</if>
+		 <if test="createDate != null and createDate != ''">AND CREATE_DATE = #{createDate}</if>
+		 <if test="modifyDate != null and modifyDate != ''">AND MODIFY_DATE = #{modifyDate}</if>
+		 <if test="name != null and name != ''">AND NAME = #{name}</if>
+		 <if test="value != null and value != ''">AND VALUE = #{value}</if>
+		 <if test="regex != null and regex != ''">AND REGEX = #{regex}</if>
+		 <if test="description != null and description != ''">AND DESCRIPTION = #{description}</if>
+		 <if test="createBy != null and createBy != ''">AND CREATE_BY = #{createBy}</if>
+		 <if test="modifyBy != null and modifyBy != ''">AND MODIFY_BY = #{modifyBy}</if>
+
+	</sql>
+
+	<!-- 查询列表数据 -->
+	<select id="queryList" resultType="config" parameterType="config">
+		 SELECT 
+			 *
+		 FROM
+		 (
+		 <include refid="queryBaseSql" />
+		 ) T LIMIT #{start},#{limit}
+	</select>
+
+	<!-- 查询总条数 -->
+	<select id="queryCount" resultType="java.lang.Long" parameterType="config">
+		 SELECT 
+			 COUNT(0)
+		 FROM
+		 (
+		 <include refid="queryBaseSql" />
+		 ) T
+	</select>
+
+	<!-- 查询（根据主键ID查询） -->
+	<select id="selectByPrimaryKey" resultType="config" parameterType="java.lang.Integer">
+		 SELECT
+		 <include refid="Base_Column_List" />
+		 FROM SYS_CONFIG
+		 WHERE ID = #{id}
+	</select>
+
+	<!--删除：根据主键ID删除-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		 DELETE FROM SYS_CONFIG
+		 WHERE ID = #{id}
+	</delete>
+
+	<!-- 添加 -->
+	<insert id="insert" parameterType="config">
+		 INSERT INTO SYS_CONFIG
+ 		(ID,ENABLE,CREATE_DATE,MODIFY_DATE,NAME,VALUE,REGEX,DESCRIPTION,CREATE_BY,MODIFY_BY) 
+		 VALUES 
+ 		(#{id},#{enable},#{createDate},#{modifyDate},#{name},#{value},#{regex},#{description},#{createBy},#{modifyBy}) 
+	</insert>
+
+	<!-- 添加 （匹配有值的字段）-->
+	<insert id="insertSelective" parameterType="config">
+		 INSERT INTO SYS_CONFIG
+		 <trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="id != null">
+				 ID,
+			</if>
+			<if test="enable != null">
+				 ENABLE,
+			</if>
+			<if test="createDate != null">
+				 CREATE_DATE,
+			</if>
+			<if test="modifyDate != null">
+				 MODIFY_DATE,
+			</if>
+			<if test="name != null">
+				 NAME,
+			</if>
+			<if test="value != null">
+				 VALUE,
+			</if>
+			<if test="regex != null">
+				 REGEX,
+			</if>
+			<if test="description != null">
+				 DESCRIPTION,
+			</if>
+			<if test="createBy != null">
+				 CREATE_BY,
+			</if>
+			<if test="modifyBy != null">
+				 MODIFY_BY,
+			</if>
+
+		 </trim>
+		 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id!=null">
+				 #{id},
+			</if>
+			<if test="enable!=null">
+				 #{enable},
+			</if>
+			<if test="createDate!=null">
+				 #{createDate},
+			</if>
+			<if test="modifyDate!=null">
+				 #{modifyDate},
+			</if>
+			<if test="name!=null">
+				 #{name},
+			</if>
+			<if test="value!=null">
+				 #{value},
+			</if>
+			<if test="regex!=null">
+				 #{regex},
+			</if>
+			<if test="description!=null">
+				 #{description},
+			</if>
+			<if test="createBy!=null">
+				 #{createBy},
+			</if>
+			<if test="modifyBy!=null">
+				 #{modifyBy},
+			</if>
+		 </trim>
+	</insert>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKeySelective" parameterType="config">
+		 UPDATE SYS_CONFIG
+ 		 <set> 
+			<if test="enable != null">
+				 ENABLE = #{enable},
+			</if>
+			<if test="createDate != null">
+				 CREATE_DATE = #{createDate},
+			</if>
+			<if test="modifyDate != null">
+				 MODIFY_DATE = #{modifyDate},
+			</if>
+			<if test="name != null">
+				 NAME = #{name},
+			</if>
+			<if test="value != null">
+				 VALUE = #{value},
+			</if>
+			<if test="regex != null">
+				 REGEX = #{regex},
+			</if>
+			<if test="description != null">
+				 DESCRIPTION = #{description},
+			</if>
+			<if test="createBy != null">
+				 CREATE_BY = #{createBy},
+			</if>
+			<if test="modifyBy != null">
+				 MODIFY_BY = #{modifyBy},
+			</if>
+
+ 		 </set>
+		 WHERE ID = #{id}
+	</update>
+
+	<!-- 修 改-->
+	<update id="updateByPrimaryKey" parameterType="config">
+		 UPDATE SYS_CONFIG
+		 SET 
+			 ENABLE = #{enable},
+			 CREATE_DATE = #{createDate},
+			 MODIFY_DATE = #{modifyDate},
+			 NAME = #{name},
+			 VALUE = #{value},
+			 REGEX = #{regex},
+			 DESCRIPTION = #{description},
+			 CREATE_BY = #{createBy},
+			 MODIFY_BY = #{modifyBy}
+		 WHERE ID = #{id}
+	</update>
+
+</mapper>
