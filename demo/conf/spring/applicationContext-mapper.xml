@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+	<bean id="commonDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<!-- 接口-->
+		<property name="mapperInterface" 
+			value="com.demo.common.dao.CommonDao"/>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+	
+	<bean id="basicInfoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<!-- 接口-->
+		<property name="mapperInterface" 
+			value="com.demo.common.mapper.BasicInfoMapper"/>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+	
+	<bean id="configMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<!-- 接口-->
+		<property name="mapperInterface" 
+			value="com.demo.common.mapper.ConfigMapper"/>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+	
+	<bean id="resourceMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<!-- 接口-->
+		<property name="mapperInterface" 
+			value="com.demo.common.mapper.ResourceMapper"/>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+	
+	<bean id="roleMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<!-- 接口-->
+		<property name="mapperInterface" 
+			value="com.demo.common.mapper.RoleMapper"/>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+	
+	<bean id="roleResRelationMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<!-- 接口-->
+		<property name="mapperInterface" 
+			value="com.demo.common.mapper.RoleResRelationMapper"/>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+	
+	<bean id="userInfoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<!-- 接口-->
+		<property name="mapperInterface" 
+			value="com.demo.common.mapper.UserInfoMapper"/>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+	
+	<bean id="userRoleRelationMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<!-- 接口-->
+		<property name="mapperInterface" 
+			value="com.demo.common.mapper.UserRoleRelationMapper"/>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+	
+	<bean id="iconsMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<!-- 接口-->
+		<property name="mapperInterface" 
+			value="com.demo.common.mapper.IconsMapper"/>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+	
+	<bean id="workflowMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<!-- 接口-->
+		<property name="mapperInterface" 
+			value="com.demo.workflow.mapper.WorkflowMapper"/>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+	
+	<bean id="leaveApplyMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<!-- 接口-->
+		<property name="mapperInterface" 
+			value="com.demo.test.workflowtest.mapper.LeaveApplyMapper"/>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+</beans>

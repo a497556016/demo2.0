@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties>
+		<property name="dialect" value="sqlserver"/>
+	</properties>
+	<typeAliases>
+		<typeAlias alias="basicInfo" type="com.demo.common.model.BasicInfo"/>
+		<typeAlias alias="config" type="com.demo.common.model.Config"/>
+		<typeAlias alias="icons" type="com.demo.common.model.Icons"/>
+		<typeAlias alias="resource" type="com.demo.common.model.Resource"/>
+		<typeAlias alias="role" type="com.demo.common.model.Role"/>
+		<typeAlias alias="roleResRelation" type="com.demo.common.model.RoleResRelation"/>
+		<typeAlias alias="userInfo" type="com.demo.common.model.UserInfo"/>
+		<typeAlias alias="userRoleRelation" type="com.demo.common.model.UserRoleRelation"/>
+		<typeAlias alias="ActGeBytearray" type="com.demo.workflow.bean.ActGeBytearray"/>
+		<typeAlias alias="ActivityInfo" type="com.demo.workflow.bean.ActivityInfo"/>
+		<typeAlias alias="ApproveInfo" type="com.demo.workflow.bean.ApproveInfo"/>
+		<typeAlias alias="DoneTaskInfo" type="com.demo.workflow.bean.DoneTaskInfo"/>
+		<typeAlias alias="ProcessInstanceInfo" type="com.demo.workflow.bean.ProcessInstanceInfo"/>
+		<typeAlias alias="TodoTaskInfo" type="com.demo.workflow.bean.TodoTaskInfo"/>
+		<typeAlias alias="LeaveApplyInfo" type="com.demo.test.workflowtest.bean.LeaveApplyInfo"/>
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="mybatis/common-sqlmap.xml" />
+		<mapper resource="com/demo/common/mapper/xml/BasicInfoMapper.xml" />
+		<mapper resource="com/demo/common/mapper/xml/ConfigMapper.xml" />
+		<mapper resource="com/demo/common/mapper/xml/ResourceMapper.xml" />
+		<mapper resource="com/demo/common/mapper/xml/RoleMapper.xml" />
+		<mapper resource="com/demo/common/mapper/xml/RoleResRelationMapper.xml" />
+		<mapper resource="com/demo/common/mapper/xml/UserInfoMapper.xml" />
+		<mapper resource="com/demo/common/mapper/xml/UserRoleRelationMapper.xml" />
+		<mapper resource="com/demo/common/mapper/xml/IconsMapper.xml" />
+		<mapper resource="com/demo/workflow/mapper/xml/WorkflowMapper.xml"/>
+		<mapper resource="com/demo/test/workflowtest/mapper/xml/LeaveApplyMapper.xml"/>
+	</mappers>
+</configuration>
