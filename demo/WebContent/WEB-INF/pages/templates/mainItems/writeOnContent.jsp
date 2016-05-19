@@ -38,7 +38,7 @@ angular.module('WriteOnContentApp', ['ionic'])
 	<div style="height:45px;"></div>
 	<div style="background-color: #fff;width:100%;height:100%;text-align: center;" align="center">
 		<a><img style="width:100%;height:80%;" alt="" src="<%=request.getContextPath() %>/image/daka.jpg" ng-click="writeOn()"></a>
-		<div>
+		<div style="width:100%;height:20%;"> 
 			<h1>请点击打卡</h1>
 		</div>
 	</div>
